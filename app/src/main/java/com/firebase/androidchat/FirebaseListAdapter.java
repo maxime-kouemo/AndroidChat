@@ -7,15 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author greg
@@ -134,7 +132,7 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError firebaseError) {
                 Log.e("FirebaseListAdapter", "Listen was cancelled, no more updates will occur");
             }
 
@@ -176,6 +174,19 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
     }
 
     /**
+     * patch by Maxime Claude
+     */
+    public String getKey(int i){
+        return mKeys.get(i);
+    }
+    public String getKey(T model){
+        return mKeys.get(mModels.indexOf(model));
+    }
+    /**
+     * end patch
+     */
+
+    /**
      * Each time the data at the given Firebase location changes, this method will be called for each item that needs
      * to be displayed. The arguments correspond to the mLayout and mModelClass given to the constructor of this class.
      * <p/>
@@ -185,4 +196,5 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
      * @param model The object containing the data used to populate the view
      */
     protected abstract void populateView(View v, T model);
+
 }
